@@ -19,10 +19,10 @@ class Client(QObject):
             self.id = str(id(self))
             self.connection = pika.BlockingConnection(self.connectionParams)
             self.channel = self.connection.channel()
-            self.exchange = "client"
+            self.exchange = config.get('EXCHANGE', 'name')
             self.channel.exchange_declare(exchange=self.exchange,
-                                          exchange_type="direct")
-            self.queue_name = "queue"
+                                          exchange_type=config.get('EXCHANGE', 'type'))
+            self.queue_name = config.get('QUEUE', 'name')
             self.channel.queue_declare(queue=self.queue_name)
             self.channel.queue_bind(exchange=self.exchange, queue=self.queue_name)
             logger.info("Start client")
@@ -67,6 +67,9 @@ class Consumer(QObject):
         self.channel = connection.channel()
         self.queue_name = queue
         self.readyConsume = False
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.check_queue)
+        self.timer.start(100)
 
     def ready_consume(self):
         self.readyConsume = True
@@ -82,9 +85,9 @@ class Consumer(QObject):
                     num = response.res
                     logger.info(num)
                     self.message_received.emit(str(num))
-            except pika.exceptions.ChannelClosedByBroker:   
+            except pika.exceptions.ChannelClosedByBroker:
                 self.message_received.emit("wait..")
                 self.channel = self.connection.channel()
             except Exception as e:
                 logger.critical(e)
-        QTimer.singleShot(100, self.check_queue)
+

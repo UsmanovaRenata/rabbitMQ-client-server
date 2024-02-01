@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QTextEdit
 from PyQt5.QtCore import QThread
 from client import Client
@@ -24,6 +26,7 @@ class ClientWindow(QWidget):
         self.consumer.moveToThread(self.thread)
         self.thread.started.connect(self.consumer.check_queue)
         self.thread.start()
+
 
     def set_widgets(self):
         layout = QVBoxLayout()

@@ -12,6 +12,15 @@ class SettingsWindow(QWidget):
         self.server_port_label = QLabel('Server Port:')
         self.server_port_line_edit = QLineEdit(self.config.get('CLIENT', 'port'))
 
+        self.exchange_name_label = QLabel('Exchange Name:')
+        self.exchange_name_line_edit = QLineEdit(self.config.get('EXCHANGE', 'name'))
+
+        self.exchange_type_label = QLabel('Exchange Type:')
+        self.exchange_type_line_edit = QLineEdit(self.config.get('EXCHANGE', 'type'))
+
+        self.queue_name_label = QLabel('Queue Name:')
+        self.queue_name_line_edit = QLineEdit(self.config.get('QUEUE', 'name'))
+
         self.client_username_label = QLabel('Username:')
         self.client_username_line_edit = QLineEdit(self.config.get('CLIENT', 'username'))
 
@@ -33,6 +42,12 @@ class SettingsWindow(QWidget):
         layout.addWidget(self.server_host_line_edit)
         layout.addWidget(self.server_port_label)
         layout.addWidget(self.server_port_line_edit)
+        layout.addWidget(self.exchange_name_label)
+        layout.addWidget(self.exchange_name_line_edit)
+        layout.addWidget(self.exchange_type_label)
+        layout.addWidget(self.exchange_type_line_edit)
+        layout.addWidget(self.queue_name_label)
+        layout.addWidget(self.queue_name_line_edit)
         layout.addWidget(self.client_username_label)
         layout.addWidget(self.client_username_line_edit)
         layout.addWidget(self.client_password_label)
@@ -50,6 +65,10 @@ class SettingsWindow(QWidget):
             self.config.set('CLIENT', 'port', self.server_port_line_edit.text())
             self.config.set('CLIENT', 'username', self.client_username_line_edit.text())
             self.config.set('CLIENT', 'password', self.client_password_line_edit.text())
+
+            self.config.set('EXCHANGE', 'name', self.exchange_name_line_edit.text())
+            self.config.set('EXCHANGE', 'type', self.exchange_type_line_edit.text())
+            self.config.set('QUEUE', 'name', self.queue_name_line_edit.text())
 
             self.config.set('LOGGING', 'level', self.logging_level_line_edit.text())
             self.config.set('LOGGING', 'file', self.logging_file_line_edit.text())
